@@ -9,6 +9,7 @@ node {
 
   stage 'Build image'
   if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != 'canary'){
+  echo "dev deps"
   sh("sed -i.bak 's#catalogue#api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80/catalogue#' ./public/index.html")
   }
   sh("docker build -t ${imageTag} .")
