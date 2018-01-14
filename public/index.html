@@ -183,7 +183,7 @@ _________________________________________________________ -->
         $("#navbar").load("navbar.html");
         $("#footer").load("footer.html");
 
-        $.getJSON('/catalogue', {size: 5}, function (data) {
+        $.getJSON('/api/v1/proxy/namespaces/new-feature/services/front-end:80/catalogue', {size: 5}, function (data) {
             if (data != null) {
                 $.each(data, function (index, element) {
                     $('#hot-slider').append(
