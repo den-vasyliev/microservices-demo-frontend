@@ -43,6 +43,7 @@ node {
         // Don't use public load balancing for development branches
         sh("sed -i.bak 's#LoadBalancer#ClusterIP#' ./k8s/services/${feSvcName}.yaml")
         sh("sed -i.bak 's#${appRepo}#${imageTag}#' ./k8s/dev/*.yaml")
+        sh("sed -i.bak 's#/catalogue#/api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80/catalogue#' .public/index.html")
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/services/")
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
         echo 'To access your environment run `kubectl proxy`'
