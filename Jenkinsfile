@@ -18,7 +18,7 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  def itag = "gcloud docker -- push ${imageTag}".execute()
+  def itag = sh("gcloud docker -- push ${imageTag}", returnStdout: true)
   itag.text.eachLine {println it}
 
   stage "Deploy Application"
