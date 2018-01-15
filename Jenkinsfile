@@ -18,7 +18,7 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  BUILD_FULL = sh(script: "gcloud docker -- push ${imageTag}", returnStatus: true) == 0
+  BUILD_FULL = sh(script: "gcloud docker -- push ${imageTag}", returnStatus: true).trim()
   echo "Build full flag: ${BUILD_FULL}"
 
   stage "Deploy Application"
