@@ -18,8 +18,9 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  def itag = sh("gcloud docker -- push ${imageTag}", returnStdout: true)
-  itag.text.eachLine {println it}
+  BUILD_FULL = sh(script: "gcloud docker -- push ${imageTag}", returnStatus: true) == 0
+  BUILD_FULL.text.eachLine {println it}
+  echo "Build full flag: ${BUILD_FULL}"
 
   stage "Deploy Application"
   switch (env.BRANCH_NAME) {
