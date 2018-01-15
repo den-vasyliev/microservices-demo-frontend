@@ -18,15 +18,15 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  BUILD_FULL = sh(script: "gcloud docker -- push ${imageTag}|tail -1", returnStdout: true).split()
-  echo "Build full flag: ${BUILD_FULL[2]}"
+  DIGEST = sh(script: "gcloud docker -- push ${imageTag}|tail -1", returnStdout: true).split()
+  echo "Image digest: ${DIGEST[2]}"
 
   stage "Deploy Application"
   switch (env.BRANCH_NAME) {
     // Roll out to canary environment
     case "canary":
         // Change deployed image in canary to the one we just built
-        sh("sed -i.bak 's#${appRepo}#${imageTag}#' ./k8s/canary/*.yaml")
+        sh("sed -i.bak 's#${appRepo}#${imageTag}@${DIGEST[2]}#' ./k8s/canary/*.yaml")
         sh("kubectl --namespace=sock-shop apply -f k8s/services/")
         sh("kubectl --namespace=sock-shop apply -f k8s/canary/")
         sh("echo http://`kubectl --namespace=sock-shop get service/${feSvcName} --output=json | jq -r '.status.loadBalancer.ingress[0].ip'` > ${feSvcName}")
@@ -35,7 +35,7 @@ node {
     // Roll out to production
     case "master":
         // Change deployed image in master to the one we just built
-        sh("sed -i.bak 's#${appRepo}#${imageTag}#' ./k8s/production/*.yaml")
+        sh("sed -i.bak 's#${appRepo}#${imageTag}@${DIGEST[2]}#' ./k8s/production/*.yaml")
         sh("kubectl --namespace=sock-shop apply -f k8s/services/")
         sh("kubectl --namespace=sock-shop apply -f k8s/production/")
         sh("echo http://`kubectl --namespace=sock-shop get service/${feSvcName} --output=json | jq -r '.status.loadBalancer.ingress[0].ip'` > ${feSvcName}")
@@ -47,7 +47,7 @@ node {
         sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
         // Don't use public load balancing for development branches
         sh("sed -i.bak 's#LoadBalancer#ClusterIP#' ./k8s/services/${feSvcName}.yaml")
-        sh("sed -i.bak 's#${appRepo}#${imageTag}#' ./k8s/dev/*.yaml")
+        sh("sed -i.bak 's#${appRepo}#${imageTag}@${DIGEST[2]}#' ./k8s/dev/*.yaml")
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/services/")
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
         echo 'To access your environment run `kubectl proxy`'
