@@ -19,7 +19,6 @@ node {
 
   stage 'Push image to registry'
   BUILD_FULL = sh(script: "gcloud docker -- push ${imageTag}", returnStatus: true) == 0
-  BUILD_FULL.text.eachLine {println it}
   echo "Build full flag: ${BUILD_FULL}"
 
   stage "Deploy Application"
