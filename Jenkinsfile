@@ -3,7 +3,7 @@ node {
   def appName = 'front-end'
   def feSvcName = "${appName}"
   def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-  def appRepo = "weaveworksdemos/front-end:0.3.12"
+    def appRepo = "weaveworksdemos/front-end:0.3.12"
 
   checkout scm
 
@@ -18,7 +18,8 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  sh("gcloud docker -- push ${imageTag}")
+  def itag = "gcloud docker -- push ${imageTag}".execute()
+  itag.text.eachLine {println it}
 
   stage "Deploy Application"
   switch (env.BRANCH_NAME) {
