@@ -2,8 +2,8 @@ node {
   def project = 'extreme-torch-190915'
   def appName = 'front-end'
   def feSvcName = "${appName}"
-  def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-    def appRepo = "weaveworksdemos/front-end:0.3.12"
+  def imageTag = "denvasyliev/demo/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+  def appRepo = "weaveworksdemos/front-end:0.3.12"
 
   checkout scm
 
