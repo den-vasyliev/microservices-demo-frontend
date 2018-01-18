@@ -20,7 +20,7 @@ node {
   sh("docker run ${imageTag} npm version")
 
   stage 'Push image to registry'
-  DIGEST = sh(script: "gcloud docker -- push ${imageTag}|tail -1", returnStdout: true).split()
+  DIGEST = sh(script: "docker push ${imageTag}|tail -1", returnStdout: true).split()
   echo "Image digest: ${DIGEST[2]}"
 
   stage "Deploy Application"
