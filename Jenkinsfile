@@ -2,7 +2,7 @@ node {
   def project = 'extreme-torch-190915'
   def appName = 'front-end'
   def feSvcName = "${appName}"
-  def imageTag = "denvasyliev/demo/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+  def imageTag = "denvasyliev/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   def appRepo = "weaveworksdemos/front-end:0.3.12"
 
   docker.withRegistry('https://index.docker.io/v1/', '231b20b4-8e7e-4925-8b42-004130cb6028'){
