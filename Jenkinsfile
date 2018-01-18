@@ -22,6 +22,7 @@ node {
   stage 'Push image to registry'
   DIGEST = sh(script: "docker push ${imageTag}|tail -1", returnStdout: true).split()
   echo "Image digest: ${DIGEST[2]}"
+  sh("apt install jq")
 
   stage "Deploy Application"
   switch (env.BRANCH_NAME) {
