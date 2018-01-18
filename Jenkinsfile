@@ -9,22 +9,25 @@ node {
 
   checkout scm
 
-  stage 'Build image'
+  stage 'Build image' {
   if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != 'canary'){
   echo "dev deps"
   sh("sed -i.bak 's#catalogue#api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80/catalogue#' ./public/index.html")
   }
   sh("docker build -t ${imageTag} .")
+  }
 
-  stage 'Run Tests'
+  stage 'Run Tests' {
   sh("docker run ${imageTag} npm version")
+  }
 
-  stage 'Push image to registry'
+  stage 'Push image to registry' {
   DIGEST = sh(script: "docker push ${imageTag}|tail -1", returnStdout: true).split()
   echo "Image digest: ${DIGEST[2]}"
   sh("apt install jq")
+  }
 
-  stage "Deploy Application"
+  stage "Deploy Application" {
   switch (env.BRANCH_NAME) {
     // Roll out to canary environment
     case "canary":
@@ -55,6 +58,7 @@ node {
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
         echo 'To access your environment run `kubectl proxy`'
         echo "Then access your service via http://localhost:8001/api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80"
-    }
+     }
+   }
   }
 }
