@@ -7,7 +7,7 @@ node {
 
   docker.withRegistry('https://index.docker.io/v1/', '231b20b4-8e7e-4925-8b42-004130cb6028'){
 
-  #checkout scm
+  checkout scm
 
   stage 'Build image' {
   if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != 'canary'){
