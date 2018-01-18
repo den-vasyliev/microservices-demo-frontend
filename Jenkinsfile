@@ -5,6 +5,8 @@ node {
   def imageTag = "denvasyliev/demo/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   def appRepo = "weaveworksdemos/front-end:0.3.12"
 
+  docker.withRegistry('https://index.docker.io/v1/', '231b20b4-8e7e-4925-8b42-004130cb6028'){
+
   checkout scm
 
   stage 'Build image'
@@ -52,5 +54,6 @@ node {
         sh("kubectl --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
         echo 'To access your environment run `kubectl proxy`'
         echo "Then access your service via http://localhost:8001/api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80"
+    }
   }
 }
