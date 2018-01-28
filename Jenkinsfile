@@ -4,7 +4,7 @@ node {
   def feSvcName = "${appName}"
   def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   def appRepo = "weaveworksdemos/front-end:0.3.12"
-
+#
   checkout scm
 
   stage 'Build image'
