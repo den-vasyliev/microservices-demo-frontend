@@ -5,7 +5,7 @@ node {
   def imageTag = "denvasyliev/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   def appRepo = "weaveworksdemos/front-end:0.3.12"
 
-  docker.withRegistry('https://index.docker.io/v1/', '995858a-e467-463d-a5d9-8a34eed191ff'){
+  docker.withRegistry('https://index.docker.io/v1/', '3995858a-e467-463d-a5d9-8a34eed191ff'){
 
   checkout scm
 
